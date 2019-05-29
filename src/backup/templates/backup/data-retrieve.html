@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Data Retrieve{% endblock %}
+{% block content %}
+<div class="col-md-10 mx-auto pt-4 my-5">
+  <h2 class="text-primary">Data Retrieve Page</h2>
+  <small class="text-info">Enter your Username or your Friend's name.</small>
+  <br><br>
+  <form action="{% url "backup:retrieve" %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="exampleInputEmail1">Search</label>
+      <input type="text" name="search" class="form-control" placeholder="Search Here..." required>
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Search</button>
+  </form>
+  <div class="text-right">
+    <a href="{% url 'backup:dataload' %}" class="btn btn-outline-info">Load Data</a>
+  </div>
+</div>
+<hr>
+
+{% if data %}
+<div class="col-md-10 mx-auto">
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Contact Number</th>
+      <th scope="col">Username</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for contact in data %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ contact.friend_name }}</td>
+          <td>{{ contact.contactnumber }}</td>
+        <td>{{ contact.username }}</td>
+      </tr>
+      {% endfor %}
+  </tbody>
+</table>
+</div>
+{% elif message %}
+<div class="p-3 mb-2 bg-danger text-white">{{ message }}</div>
+<br>
+{% endif %}
+{% endblock %}

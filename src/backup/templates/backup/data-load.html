@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Data Load{% endblock %}
+{% block content %}
+<div class="col-md-10 mx-auto pt-4 my-5">
+  <h2 class="text-primary">Data Load Page</h2>
+  <small class="text-info">Load you're data using excel(.xlsx) file..</small>
+  <br><br>
+  <form action="{% url "backup:dataload" %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="exampleInputEmail1">Username</label>
+      <input type="text" name="username" class="form-control" placeholder="Enter Your Username" required>
+    </div>
+    <div class="form-group">
+      <label for="exampleFormControlFile1">Upload an Excel Sheet </label>
+      <input type="file" name="excel_file" class="form-control-file" required>
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Upload</button>
+  </form>
+  <div class="text-right">
+    <a href="{% url 'backup:retrieve' %}" class="btn btn-outline-info">Retrieve Data</a>
+  </div>
+</div>
+<hr>
+{% if excel_data %}
+<div class="col-md-10 mx-auto">
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Contact Number</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in excel_data %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        {% for cell in row %}
+          <td>{{ cell }}</td>
+        {% endfor %}
+        <td><i class="fas fa-check text-info"></i></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% elif message %}
+<div class="p-3 mb-2 bg-danger text-white">{{ message }}</div>
+<br>
+{% endif %}
+{% endblock %}
